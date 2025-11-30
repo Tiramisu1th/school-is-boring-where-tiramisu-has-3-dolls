@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .expandable-bar {
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .expandable-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background 0.3s ease;
+        }
+
+        .expandable-header:hover {
+            background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+        }
+
+        .expandable-header .arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .expandable-header.expanded .arrow {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background: #f8f9fa;
+        }
+
+        .expandable-content.expanded {
+            max-height: 400px;
+        }
+
+        .game-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .game-option:last-child {
+            border-bottom: none;
+        }
+
+        .game-option:hover {
+            background: #e9ecef;
+        }
+
+        .game-option.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .game-option input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #667eea;
+        }
+
+        .game-option.selected input[type="radio"] {
+            accent-color: white;
+        }
+
+        .go-button {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .go-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .go-button:active {
+            transform: translateY(0);
+        }
+
+        .go-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Game Selection</h1>
+        
+        <div class="expandable-bar">
+            <div class="expandable-header" id="expandHeader">
+                <span id="selectedGameText">Select a Game</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="expandable-content" id="expandContent">
+                <label class="game-option" data-game="texas-poker">
+                    <input type="radio" name="game" value="texas-poker">
+                    Texas Poker
+                </label>
+                <label class="game-option" data-game="show-hand">
+                    <input type="radio" name="game" value="show-hand">
+                    Show Hand
+                </label>
+                <label class="game-option" data-game="secret-hitler">
+                    <input type="radio" name="game" value="secret-hitler">
+                    Secret Hitler
+                </label>
+                <label class="game-option" data-game="blood-on-the-clocktower">
+                    <input type="radio" name="game" value="blood-on-the-clocktower">
+                    血染鐘樓
+                </label>
+                <label class="game-option" data-game="werewolf">
+                    <input type="radio" name="game" value="werewolf">
+                    狼人殺
+                </label>
+                <label class="game-option" data-game="avalon">
+                    <input type="radio" name="game" value="avalon">
+                    Avalon
+                </label>
+            </div>
+        </div>
+        
+        <button class="go-button" id="goButton" disabled>Go to Game</button>
+    </div>
+
+    <script>
+        const expandHeader = document.getElementById('expandHeader');
+        const expandContent = document.getElementById('expandContent');
+        const goButton = document.getElementById('goButton');
+        const selectedGameText = document.getElementById('selectedGameText');
+        const gameOptions = document.querySelectorAll('.game-option');
+        
+        let selectedGame = null;
+        
+        const gameNames = {
+            'texas-poker': 'Texas Poker',
+            'show-hand': 'Show Hand',
+            'secret-hitler': 'Secret Hitler',
+            'blood-on-the-clocktower': '血染鐘樓',
+            'werewolf': '狼人殺',
+            'avalon': 'Avalon'
+        };
+        
+        // Toggle expandable bar
+        expandHeader.addEventListener('click', () => {
+            expandHeader.classList.toggle('expanded');
+            expandContent.classList.toggle('expanded');
+        });
+        
+        // Handle game selection
+        gameOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                // Remove selected class from all options
+                gameOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                option.classList.add('selected');
+                
+                // Check the radio button
+                const radio = option.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Update selected game
+                selectedGame = option.dataset.game;
+                selectedGameText.textContent = gameNames[selectedGame];
+                
+                // Enable the go button
+                goButton.disabled = false;
+            });
+        });
+        
+        // Handle go button click
+        goButton.addEventListener('click', () => {
+            if (selectedGame) {
+                window.location.href = `games/${selectedGame}.html`;
+            }
+        });
+    </script>
+</body>
+</html>
