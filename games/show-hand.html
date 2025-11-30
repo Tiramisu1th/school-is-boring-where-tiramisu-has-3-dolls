@@ -77,8 +77,73 @@
     <div class="container">
         <h1>🎴 Show Hand</h1>
         <p class="wip-message">Working in Progress...</p>
-        <a href="../index.html" class="back-button">← Back to Game Selection</a>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+            <a href="../index.html" class="back-button">← Back to Game Selection</a>
+            <button class="back-button" id="printRulesBtn" type="button">🖨️ Print Rules</button>
+        </div>
+
+        <hr style="margin:20px 0;border:none;border-top:1px solid #eef2f7;">
+
+        <section id="rules">
+            <h2 style="font-size:1.25rem;margin-bottom:10px;color:#333;text-align:center;">Five-Card Stud — Compact
+                Rules (printable)</h2>
+            <div style="font-size:0.95rem;line-height:1.45;color:#222;padding:0 6px;">
+                <strong>Variant:</strong> Five-Card Stud (as featured in God of Gamblers)
+                <ol style="margin-top:8px;padding-left:18px;">
+                    <li><strong>Players:</strong> 2–8 (typical). Use antes or a small bring-in to seed the pot.</li>
+                    <li><strong>Deal:</strong> Each player receives 2 cards to start — 1 face down (hole) and 1 face up.
+                        After the initial betting round, deal one face-up card per player three more times so each
+                        player has 5 cards total (1 down + 4 up).</li>
+                    <li><strong>Betting rounds:</strong> There is a round of betting after the initial deal and after
+                        each subsequent up-card (total 4 betting rounds). Action options: fold, call, bet, raise. House
+                        can use fixed-limit, pot-limit, or no-limit.</li>
+                    <li><strong>Showdown:</strong> After the final betting round, remaining players reveal their hole
+                        cards; the best five-card poker hand wins the pot. Standard poker hand rankings apply.</li>
+                    <li><strong>Strategy tips:</strong> Because most cards are face-up, track visible cards to estimate
+                        opponents' ranges and use position and selective bluffing.</li>
+                </ol>
+
+                <p style="margin-top:8px;"><strong>Standard hand rankings (best → worst):</strong> Royal Flush, Straight
+                    Flush, Four of a Kind, Full House, Flush, Straight, Three of a Kind, Two Pair, One Pair, High Card.
+                </p>
+
+                <p style="margin-top:6px;color:#444;"><strong>Film-specific notes:</strong> In the movie Chan Kam-sing
+                    cheats using special glasses to read marked cards; Ko Chun counters by altering card markings and
+                    using contact lenses. Stakes and behavior are dramatized for cinema — real casinos enforce strict
+                    anti-cheating measures and etiquette.</p>
+
+                <p style="margin-top:6px;color:#444;"><em>Printing tip:</em> Use the Print Rules button above or your
+                    browser's print (Ctrl+P). The print stylesheet hides page chrome and prints only this rules section
+                    for a clean handout.</p>
+            </div>
+        </section>
     </div>
+    <script>
+        // Print rules button: prints only the rules section (CSS handles visibility)
+        document.getElementById('printRulesBtn').addEventListener('click', () => window.print());
+    </script>
+    <style>
+        /* Print rules: hide everything except the #rules section */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #rules,
+            #rules * {
+                visibility: visible;
+            }
+
+            #rules {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 12mm;
+                box-sizing: border-box;
+            }
+        }
+    </style>
 </body>
 
 </html>
