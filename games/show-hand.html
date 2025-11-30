@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,22 +14,24 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fb;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #222;
         }
 
         .container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            padding: 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.06);
+            padding: 36px;
             text-align: center;
-            max-width: 500px;
+            max-width: 520px;
+            border: 1px solid #e6e9ef;
         }
 
         h1 {
@@ -39,30 +42,32 @@
 
         .wip-message {
             font-size: 1.5rem;
-            color: #667eea;
-            margin-bottom: 30px;
+            color: #1f6feb;
+            margin-bottom: 28px;
         }
 
         .back-button {
-            padding: 12px 30px;
+            padding: 10px 26px;
             font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-weight: 700;
+            color: #fff;
+            background: #1f6feb;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+            box-shadow: 0 2px 8px rgba(31, 111, 235, 0.18);
         }
 
         .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(31, 111, 235, 0.18);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🎴 Show Hand</h1>
@@ -70,4 +75,5 @@
         <a href="../index.html" class="back-button">← Back to Game Selection</a>
     </div>
 </body>
+
 </html>
