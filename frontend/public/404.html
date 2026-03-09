@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>404 — Page not found</title>
+    <meta name="description" content="The page you requested could not be found on School Is Boring." />
+    <style>
+        body {
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            margin: 0;
+            background: #f7f7fb;
+            color: #111
+        }
+
+        main {
+            max-width: 900px;
+            margin: 6vh auto;
+            padding: 32px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 6px 24px rgba(16, 24, 40, 0.06)
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px
+        }
+
+        p {
+            margin: 8px 0 16px;
+            color: #334155
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #0b5fff;
+            color: #fff;
+            text-decoration: none
+        }
+
+        .meta {
+            margin-top: 18px;
+            color: #475569;
+            font-size: 13px
+        }
+
+        .hint {
+            margin-top: 12px;
+            color: #64748b;
+            font-size: 13px
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>404 — Page not found</h1>
+        <p>We couldn't find the page you requested. It may have been moved, renamed, or never existed.</p>
+
+        <p class="hint">Requested path: <strong id="req-path">(unknown)</strong></p>
+
+        <a class="button" href="/">Return to games hub</a>
+
+        <div class="meta">
+            <p>If you reached this page from a link, try returning to the hub and following a game link. If the problem
+                persists, contact the site maintainer.</p>
+        </div>
+    </main>
+
+    <script>
+        // Show the requested path so the 404 provides context
+        try {
+            var path = location.pathname + location.search + location.hash;
+            document.getElementById('req-path').textContent = path;
+        } catch (e) { }
+    </script>
+</body>
+
+</html>
