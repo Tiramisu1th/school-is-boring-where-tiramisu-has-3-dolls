@@ -1,7 +1,13 @@
-/chamber
-/.next
-frontend/out
-deploy
-node_modules
+# chamber/ is used to store scripts not part of the project, just conveniently stored in the repo
+chamber/
+
+# out/ is used to store the output of the build_for_cpanel.ps1 script, which is too large and contain secrets
+out/
+out.tar.gz
+
+# .env contains secrets and should not be committed
 .env
-deploy.zip
+
+# large and unnecessary output files from the build process
+.next/
+node_modules/
