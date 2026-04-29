@@ -6,7 +6,6 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
-var url = require('url');
 
 var contentTypes = {
     '.html': 'text/html',
@@ -39,7 +38,9 @@ function sendFile(res, filePath, statusCode) {
 }
 
 var server = http.createServer(function(req, res) {
-    var parsed = url.parse(req.url || '/');
+    // `req.url` may be a path-only string; provide a base so `new URL` can parse it.
+    var base = 'http://localhost';
+    var parsed = new URL(req.url || '/', base);
     var pathname = decodeURIComponent(parsed.pathname || '/');
 
     // Normalize and prevent directory traversal
@@ -92,7 +93,12 @@ var server = http.createServer(function(req, res) {
     }
 });
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
+if (!port) {
+    console.error('Error: PORT environment variable is not set.');
+    process.exit(1);
+}
+
 server.listen(port, function() {
     console.log('Server listening on port ' + port);
 });
