@@ -94,10 +94,6 @@ var server = http.createServer(function(req, res) {
 });
 
 var port = process.env.PORT;
-if (!port) {
-    console.error('Error: PORT environment variable is not set.');
-    process.exit(1);
-}
 
 server.listen(port, function() {
     console.log('Server listening on port ' + port);

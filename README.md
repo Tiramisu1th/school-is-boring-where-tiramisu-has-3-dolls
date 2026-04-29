@@ -37,12 +37,43 @@ git clone https://github.com/Tiramisu1th/school-is-boring-where-tiramisu-has-3-d
 ```
 
 
-## Testing locally
+## Testing backend locally
+
 ```powershell
 .\build_for_cpanel.ps1 -l
 ```
-You can also add an optional -p [flag] to specify which port should `npx run dev` use. For example,
+You can also add an optional -p flag to specify which port should `Node out\app.js` use. For example,
 ```powershell
 .\build_for_cpanel.ps1 -lp2526
 ```
-#### For now, you can only test the appearance in frontend. I still haven't figured out a way to perfectly imitate the backend on localhost mode
+#### Expected Command Output
+```powershell
+Server listening on port 2526
+```
+
+## Previewing TypeScript webpages only
+```powershell
+.\build_for_cpanel.ps1 -d
+```
+You can also add an optional -p flag to specify which port should `npx run dev` use. For example,
+```powershell
+.\build_for_cpanel.ps1 -lp2526
+```
+#### Expected Command Output
+```powershell
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:2526
+- Network:       http://calculateangle:2526
+- Environments: .env
+```
+
+## Versions
+| Item | Version |
+| --- | --- |
+| **npm** | `11.9.0` |
+| **Node.js** | `v24.14.0` |
+| **Next.js** | `16.2.4` |
+| **React** | `19.2.5`|
+| **React DOM** | `19.2.5` |
+| **socket.io** | `4.8.3` |
+| **TypeScript** | `6.0.3` |
