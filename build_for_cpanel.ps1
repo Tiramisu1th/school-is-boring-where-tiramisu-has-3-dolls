@@ -169,15 +169,12 @@ if ($Localhost) {
     Set-Item -Path env:NEXT_PUBLIC_BASE_URL -Value $localUrl
 
     # Build out/ folder with compiled frontend and whitelisted server files for deployment. 
-    Write-Host "Clearing the artifacts in out/ from previous builds (if any) ... "
-    $outPath = Join-Path $repoRoot 'out'
-    if (Test-Path $outPath) {
-        Write-Host "Cleaning existing out/ directory at $outPath"
-        Remove-Item -Recurse -Force $outPath
-    }
-    Write-Host "Compiling TypeScript files to out/ ... "
+    Write-Host "Running Next build (npm run build) ..."
     npm run build
+    Write-Host "Running TypeScript compiler (npm run compile:ts) ..."
+    npm run compile:ts
     Write-Host "Copying other necessary files to out/ ... "
+    $outPath = Join-Path $repoRoot 'out'
     foreach ($name in $RootWhitelist) {
         $src = Join-Path $repoRoot $name
         $dst = Join-Path $outPath $name
@@ -201,15 +198,12 @@ if ($Localhost) {
 
 
 # Build out/ folder with compiled frontend and whitelisted server files for deployment. 
-Write-Host "Clearing the artifacts in out/ from previous builds (if any) ... "
-$outPath = Join-Path $repoRoot 'out'
-if (Test-Path $outPath) {
-    Write-Host "Cleaning existing out/ directory at $outPath"
-    Remove-Item -Recurse -Force $outPath
-}
-Write-Host "Compiling TypeScript files to out/ ... "
+Write-Host "Running Next build (npm run build) ..."
 npm run build
+Write-Host "Running TypeScript compiler (npm run compile:ts) ..."
+npm run compile:ts
 Write-Host "Copying other necessary files to out/ ... "
+$outPath = Join-Path $repoRoot 'out'
 foreach ($name in $RootWhitelist) {
     $src = Join-Path $repoRoot $name
     $dst = Join-Path $outPath $name

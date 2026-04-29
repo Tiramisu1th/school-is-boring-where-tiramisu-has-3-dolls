@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "compile:ts": "tsc -p tsconfig.build.json",
     "build": "next build",
     "export": "next export",
     "start": "next start"

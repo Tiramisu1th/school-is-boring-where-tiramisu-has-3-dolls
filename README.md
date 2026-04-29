@@ -27,7 +27,10 @@ schoolisboring
    │  ├─ index.tsx
    │  ├─ show-hand.tsx # WIP
    │  └─ werewolf.tsx # WIP
-   └─ styles/ # CSS is currently not in top priorities
+   ├─ styles/ # CSS is currently not in top priorities
+   └─ utils/ # minor helper functions
+      ├─ time.tsx # time-related helper functions
+      └─ print.ts # mimic python print() but includes a timestamp
 ```
 
 

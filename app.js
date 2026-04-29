@@ -6,7 +6,11 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
+const print = require('./src/utils/print.js').print;
 
+print('Start running app.js ... ');
+
+// Attempt to load the timestamp function from time.js or time.ts, with fallback
 var contentTypes = {
     '.html': 'text/html',
     '.htm': 'text/html',
@@ -95,6 +99,10 @@ var server = http.createServer(function(req, res) {
 
 var port = process.env.PORT;
 
+print('Server setup complete, starting to listen on port ' + String(port) + ' ...');
+
 server.listen(port, function() {
-    console.log('Server listening on port ' + port);
+    print('Server started successfully! ', end='');
+    print('Listening on Port ' + String(port));
+    print('If you see this in your own console, feel free to Ctrl+C to stop the server!');
 });
