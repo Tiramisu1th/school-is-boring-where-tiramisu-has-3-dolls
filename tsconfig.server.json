@@ -1,19 +1,16 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "target": "ES2020",
-        "module": "commonjs",
-        "rootDir": "src",
-        "outDir": "out/src",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": false,
-        "skipLibCheck": true,
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
+        "noEmit": false,
         "noEmitOnError": false,
+        "module": "commonjs",
+        "outDir": "out",
+        "rootDir": ".",
+        "target": "ES2020",
         "types": ["node"]
     },
     "include": [
+        "app.ts",
         "src/api/**/*",
         "src/utils/**/*"
     ],
