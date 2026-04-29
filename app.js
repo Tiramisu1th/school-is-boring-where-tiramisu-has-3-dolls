@@ -54,6 +54,21 @@ var server = http.createServer(function(req, res) {
     // base directory is the directory where this script lives
     var baseDir = __dirname;
 
+    // --- API routing: dispatch paths starting with /api
+    if (pathname === '/api' || pathname.startsWith('/api/')) {
+        try {
+            var api = require('./src/api');
+            // subpath after /api
+            var sub = pathname === '/api' ? '/' : pathname.replace(/^\/api/, '');
+            api.route(req, res, sub);
+            return;
+        } catch (e) {
+            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.end('API Error');
+            return;
+        }
+    }
+
     // Helper to resolve within baseDir
     function resolveInBase(p) {
         return path.normalize(path.join(baseDir, p));
@@ -103,6 +118,7 @@ print('Server setup complete, starting to listen on port ' + String(port) + ' ..
 
 server.listen(port, function() {
     print('Server started successfully! ', end='');
-    print('Listening on Port ' + String(port));
+    print(`Listening on port ${port}`);
+    print(`To access the server, open http://localhost:${port} in your browser.`);
     print('If you see this in your own console, feel free to Ctrl+C to stop the server!');
 });

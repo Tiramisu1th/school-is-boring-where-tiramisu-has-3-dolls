@@ -5,29 +5,36 @@
  * - if `timestamp` is true, an ISO timestamp is prepended
  */
 import { timestamp } from './time';
+import * as fs from 'fs';
+import * as path from 'path';
+
 let __newlineFlag = true;
 
-/**
- * Python-like print function with prepend timestamp
- * @param text -- the text to print (will be converted to string if not already)
- * @param end -- the string to append at the end of the output (default: newline)
- */
 export function print(text: any, end: string = '\n'): void {
     const shouldTimestamp = __newlineFlag;
-
     const str = typeof text === 'string' ? text : String(text);
     const out = (shouldTimestamp ? `${timestamp()} ` : '') + str + end;
 
-    // In Node prefer writing to stdout to preserve exact end string
+    // --- LOG TO FILE ---
+    try {
+        // This path goes up two levels from src/utils to the root MINIGAMES folder
+        const logPath = path.join(__dirname, '..', '..', 'stderr.log');
+        fs.appendFileSync(logPath, out);
+    } catch (e) {
+        // On some local environments, this might fail if the folder is restricted
+    }
+
+    // --- LOG TO CONSOLE (Localhost behavior) ---
     if (typeof process !== 'undefined' && (process as any).stdout) {
-        try { (process as any).stdout.write(out); }
-        catch { console.log(out); }
+        try {
+            (process as any).stdout.write(out);
+        } catch {
+            console.log(out);
+        }
     } else {
-        // Fallback to console.log in browsers
         console.log(out);
     }
 
-    // Update newline flag: active if the output ended with a newline character
     __newlineFlag = end.includes('\n');
 }
 

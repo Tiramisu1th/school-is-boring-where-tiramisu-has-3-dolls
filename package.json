@@ -8,13 +8,13 @@
   },
   "scripts": {
     "dev": "next dev",
-    "compile:ts": "tsc -p tsconfig.build.json",
+    "compile:ts": "tsc -p tsconfig.server.json",
     "build": "next build",
     "export": "next export",
     "start": "next start"
   },
   "devDependencies": {
-    "@types/node": "25.6.0",
+    "@types/node": "^25.6.0",
     "@types/react": "19.2.14",
     "typescript": "6.0.3"
   },
