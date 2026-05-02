@@ -185,6 +185,8 @@ if ($Localhost) {
         }
         else { Write-Host "Skipping missing root file: $name" }
     }
+    Write-Host "Writing 404.html to replace default 404 given by next export ... "
+    Copy-Item -Path (Join-Path $repoRoot 'public\404.html') -Destination (Join-Path $outPath '404.html') -Force
 
     # Start Node using out/app.js as backend. Export PORT env var for the process.
     Set-Item -Path env:PORT -Value "$Port"
@@ -214,6 +216,8 @@ foreach ($name in $RootWhitelist) {
     }
     else { Write-Host "Skipping missing root file: $name" }
 }
+Write-Host "Writing 404.html to replace default 404 given by next export ... "
+Copy-Item -Path (Join-Path $repoRoot 'public\404.html') -Destination (Join-Path $outPath '404.html') -Force
 
 
 # For packaging flow: also overwrites out.tar.gz in repo root

@@ -4,79 +4,158 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>404 — Page not found</title>
-    <meta name="description" content="The page you requested could not be found on School Is Boring." />
+    <title>404 - Not Found</title>
     <style>
         body {
-            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-            margin: 0;
+            font-family: Segoe UI, system-ui, Roboto, Arial;
+            margin: 20px;
             background: #f7f7fb;
             color: #111
         }
 
-        main {
-            max-width: 900px;
+        .card {
+            max-width: 920px;
             margin: 6vh auto;
-            padding: 32px;
-            border-radius: 8px;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #e6e9ee;
             background: #fff;
-            box-shadow: 0 6px 24px rgba(16, 24, 40, 0.06)
+            box-shadow: 0 6px 18px rgba(20, 20, 40, 0.06)
         }
 
-        h1 {
-            margin: 0 0 8px;
-            font-size: 28px
+        pre {
+            background: #f6f8fa;
+            padding: 12px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
-        p {
-            margin: 8px 0 16px;
-            color: #334155
+        .muted {
+            color: #666
         }
 
-        a.button {
-            display: inline-block;
-            padding: 10px 14px;
-            border-radius: 6px;
-            background: #0b5fff;
-            color: #fff;
-            text-decoration: none
+        button {
+            padding: 6px 10px
         }
 
-        .meta {
-            margin-top: 18px;
-            color: #475569;
-            font-size: 13px
+        button[role="link"],
+        a[role="link"] {
+            cursor: pointer;
         }
 
-        .hint {
-            margin-top: 12px;
-            color: #64748b;
-            font-size: 13px
+        a[role="link"] {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(20, 20, 40, 0.03);
+        }
+
+        #link-main,
+        #link-health {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            min-width: 120px;
+            padding: 16px 0;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 4px;
+            border: 1px solid #cfcfcf;
+            background: #f8f8f8;
+            color: #444;
+        }
+
+        #link-main:hover,
+        #link-health:hover {
+            background: #efefef;
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <h1>404 — Page not found</h1>
-        <p>We couldn't find the page you requested. It may have been moved, renamed, or never existed.</p>
+    <div id="debug-card" class="card">
+        <h2 id="debug-title" style="margin:0 0 8px">404 - Not Found</h2>
+        <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+            <div id="col-url" style="flex:1 1 360px">
+                <div style="margin-bottom:8px"><strong>Requested URL:</strong> <span id="requestedUrl">loading...</span>
+                </div>
+                <div><strong>Referrer:</strong> <span id="referrer">loading...</span></div>
+            </div>
 
-        <p class="hint">Requested path: <strong id="req-path">(unknown)</strong></p>
+            <div id="col-client" style="flex:1 1 100%;margin-top:0">
+                <div id="label-client" style="font-weight:600;margin-bottom:6px">Client</div>
+                <pre id="client-headers">loading...</pre>
+            </div>
 
-        <a class="button" href="/">Return to games hub</a>
-
-        <div class="meta">
-            <p>If you reached this page from a link, try returning to the hub and following a game link. If the problem
-                persists, contact the site maintainer.</p>
+            <div id="col-actions" style="flex:1 1 100%;margin-bottom:12px">
+                <div id="actions-list" style="display:flex;gap:18px;width:100%">
+                    <a id="link-main" href="./" aria-label="Main Menu" title="Main Menu" role="link">Main
+                        Menu</a>
+                    <a id="link-health" href="./health" aria-label="Health Check" title="Health Check" role="link">Health
+                        Check</a>
+                </div>
+            </div>
         </div>
-    </main>
+
+        <div id="ping-result-box" style="margin-top:12px">
+            <div id="label-ping-result" style="font-weight:600;margin-bottom:6px">Ping Result</div>
+            <pre id="pingResult">no result yet</pre>
+        </div>
+    </div>
 
     <script>
-        // Show the requested path so the 404 provides context
-        try {
-            var path = location.pathname + location.search + location.hash;
-            document.getElementById('req-path').textContent = path;
-        } catch (e) { }
+        (function () {
+            const requestedUrlEl = document.getElementById('requestedUrl');
+            const referrerEl = document.getElementById('referrer');
+            const clientInfoEl = null; // merged into client-headers
+            const queryHashEl = null;
+            const pingBtn = null;
+            const pingJsonBtn = null;
+            const btnMain = document.getElementById('btn-main');
+            const btnHealth = document.getElementById('btn-health');
+            const pingResult = document.getElementById('pingResult');
+            const pingStatus = document.getElementById('pingStatus');
+
+            function safeJson(v) { try { return JSON.stringify(v, null, 2); } catch (e) { return String(v); } }
+
+            requestedUrlEl.textContent = location.href;
+            referrerEl.textContent = document.referrer || 'none';
+            const clientHeaders = {
+                'User-Agent': navigator.userAgent,
+                'Accept-Language': navigator.language,
+                'Platform': navigator.platform,
+                'Vendor': navigator.vendor,
+                'Cookies Enabled': navigator.cookieEnabled,
+                'Online': navigator.onLine,
+                'Screen': { width: screen.width, height: screen.height, pixelRatio: window.devicePixelRatio },
+                'TimeZone': (Intl && Intl.DateTimeFormat) ? Intl.DateTimeFormat().resolvedOptions().timeZone : undefined,
+            };
+            const clientHeadersEl = document.getElementById('client-headers');
+            if (clientHeadersEl) clientHeadersEl.textContent = safeJson(clientHeaders);
+
+            async function doPing() {
+                pingResult.textContent = '';
+                try {
+                    const start = performance.now();
+                    const res = await fetch('/api/health', { method: 'GET', headers: { 'Accept': 'application/json' } });
+                    const duration = Math.round(performance.now() - start);
+                    const text = await res.text();
+                    let parsed = text;
+                    try { parsed = text ? JSON.parse(text) : text } catch (e) { parsed = text }
+                    const out = { status: res.status, statusText: res.statusText, durationMs: duration, body: parsed };
+                    pingResult.textContent = safeJson(out);
+                } catch (err) {
+                    pingResult.textContent = 'error: ' + String(err);
+                }
+            }
+            doPing();
+        })();
     </script>
 </body>
 
