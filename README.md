@@ -11,26 +11,36 @@ Who cares?
 Top-level repository layout (important files and folders):
 
 ```
-schoolisboring
-├─ .env.example # Shows an example of how .env looks like
-├─ .gitignore # helps me hide secrets
-├─ app.js # The entry point of the website's backend
-├─ build_for_cpanel.ps1 # The script to streamline compilation/localhost procedures
-├─ package.json
-├─ README.md # this file
+school-is-boring-where-tiramisu-has-3-dolls
+├─ app.ts # cPanel Node.js app entry point
+├─ build_for_cpanel.ps1 # Windows script to compile and/or run locally
+├─ next-env.d.ts # do I look like I know what this is?
+├─ next.config.js # do I look like I know what this is?
+├─ package.json # do I look like I know what this is?
+├─ README.md # thie docs
+├─ tsconfig.json # do I look like I know what this is?
+├─ tsconfig.server.json # do I look like I know what this is?
 ├─ public/
-│  ├─ 404.html
-│  └─ assets/ # favicons and potentially pngs and svgs in the future
+│  ├─ 404.html # custom context-rich 404
+│  └─ assets/
 └─ src/
-   ├─ pages/ # frontend webpages
-   │  ├─ avalon.tsx # WIP
+   ├─ api/ # also serve as api endpoints
+   │  ├─ auth.ts
+   │  ├─ health.ts
+   │  └─ router.ts
+   ├─ pages/
+   │  ├─ avalon.tsx
+   │  ├─ health.tsx
    │  ├─ index.tsx
-   │  ├─ show-hand.tsx # WIP
-   │  └─ werewolf.tsx # WIP
-   ├─ styles/ # CSS is currently not in top priorities
-   └─ utils/ # minor helper functions
-      ├─ time.tsx # time-related helper functions
-      └─ print.ts # mimic python print() but includes a timestamp
+   │  ├─ postman.tsx
+   │  ├─ show-hand.tsx
+   │  └─ werewolf.tsx
+   ├─ styles/ # Nothing yet
+   └─ utils/ # Helper functions
+      ├─ cors.ts
+      ├─ print.ts
+      ├─ teapot.ts
+      └─ time.ts
 ```
 
 
@@ -45,9 +55,9 @@ git clone https://github.com/Tiramisu1th/school-is-boring-where-tiramisu-has-3-d
 ```powershell
 .\build_for_cpanel.ps1 -l
 ```
-You can also add an optional -p flag to specify which port should `Node out\app.js` use. For example,
+You can also add numbers to specify which port should `Node out\app.js` use. For example,
 ```powershell
-.\build_for_cpanel.ps1 -lp2526
+.\build_for_cpanel.ps1 -p2526
 ```
 #### Expected Command Output
 ```powershell
@@ -60,7 +70,7 @@ Server listening on port 2526
 ```
 You can also add an optional -p flag to specify which port should `npx run dev` use. For example,
 ```powershell
-.\build_for_cpanel.ps1 -lp2526
+.\build_for_cpanel.ps1 -d2526
 ```
 #### Expected Command Output
 ```powershell
@@ -73,6 +83,7 @@ You can also add an optional -p flag to specify which port should `npx run dev` 
 ## Versions
 | Item | Version |
 | --- | --- |
+| **dotenv** | `17.4.2` |
 | **npm** | `11.9.0` |
 | **Node.js** | `v24.14.0` |
 | **Next.js** | `16.2.4` |

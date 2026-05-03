@@ -46,7 +46,6 @@ param(
 Write-Host "Building frontend and packaging static files for cPanel..."
 
 # YES, I AM CERTAIN THAT I WANT TO INCLUDE .env INTO THE OUT FOLDER (Tiramisu1th, 2026)
-# never mind, I don't need .env anymore because I don't have python backend
 $RootWhitelist = @('.env', 'package.json', 'package-lock.json')
 
 # Support shorthand `-lp 2526` or `-lp2526` by detecting it in the original command line
