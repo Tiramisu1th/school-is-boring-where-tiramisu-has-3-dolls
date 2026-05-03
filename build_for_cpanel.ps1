@@ -47,45 +47,45 @@ Write-Host "Building frontend and packaging static files for cPanel..."
 
 # YES, I AM CERTAIN THAT I WANT TO INCLUDE .env INTO THE OUT FOLDER (Tiramisu1th, 2026)
 # never mind, I don't need .env anymore because I don't have python backend
-$RootWhitelist = @('app.js', 'package.json', 'package-lock.json')
+$RootWhitelist = @('.env', 'package.json', 'package-lock.json')
 
 # Support shorthand `-lp 2526` or `-lp2526` by detecting it in the original command line
 try {
     $invocationLine = $MyInvocation.Line
-    if ($invocationLine -match "(?i)-lp\s*(\d+)") {
+    if ($invocationLine -match "(?i)(?:^|\s)-lp\s*(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -lp; setting -Localhost and Port=$matchesPort"
         $Localhost = $true
         $Port = $matchesPort
     }
-    elseif ($invocationLine -match "(?i)-lp(\d+)") {
+    elseif ($invocationLine -match "(?i)(?:^|\s)-lp(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -lp; setting -Localhost and Port=$matchesPort"
         $Localhost = $true
         $Port = $matchesPort
     }
     # support -lNNNN (e.g. -l1234) to set localhost + port
-    if ($invocationLine -match "(?i)-l(\d+)") {
+    if ($invocationLine -match "(?i)(?:^|\s)-l(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -lNNNN; setting -Localhost and Port=$matchesPort"
         $Localhost = $true
         $Port = $matchesPort
     }
     # support -dp or -pd combined (dev + port)
-    if ($invocationLine -match "(?i)-dp\s*(\d+)") {
+    if ($invocationLine -match "(?i)(?:^|\s)-dp\s*(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -dp; setting -Dev and Port=$matchesPort"
         $Dev = $true
         $Port = $matchesPort
     }
-    elseif ($invocationLine -match "(?i)-dp(\d+)") {
+    elseif ($invocationLine -match "(?i)(?:^|\s)-dp(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -dp; setting -Dev and Port=$matchesPort"
         $Dev = $true
         $Port = $matchesPort
     }
     # support -dNNNN (e.g. -d1234) to set dev + port
-    if ($invocationLine -match "(?i)-d(\d+)") {
+    if ($invocationLine -match "(?i)(?:^|\s)-d(\d+)(?:\s|$)") {
         $matchesPort = [int]$matches[1]
         Write-Host "Detected combined flag -dNNNN; setting -Dev and Port=$matchesPort"
         $Dev = $true
@@ -97,7 +97,8 @@ catch {
 }
 
 # Defines repo root and script directory for relative paths below
-$repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
+# Prefer $PSScriptRoot which is the script's folder when executed
+$repoRoot = $PSScriptRoot
 
 
 # Load environment variables from repo root .env so build-time vars like INTERNAL_API_BASE are available
@@ -125,6 +126,13 @@ if (-not $env:BASE_URL) {
 }
 
 
+# Ensure the existence of GLOBAL_PASSWORD
+if (-not $env:GLOBAL_PASSWORD) {
+    Write-Host "Warning: GLOBAL_PASSWORD not set in .env!!!!!"
+    exit 1
+}
+
+
 # Always run npm install to ensure node_modules are up to date
 Write-Host "Running npm install..."
 npm install
@@ -147,7 +155,17 @@ if ($Dev) {
     Set-Item -Path env:NEXT_PUBLIC_BASE_URL -Value $localUrl
 
     Write-Host "Starting Next.js dev server on port $Port"
-    npm run dev --silent -- -p $Port
+    # Prefer invoking the local Next binary to ensure args are passed as flags and
+    # not interpreted as a positional project directory.
+    $nextCmd = Join-Path $repoRoot 'node_modules\.bin\next.cmd'
+    if (Test-Path $nextCmd) {
+        Write-Host "Launching local next: $nextCmd dev -p $Port"
+        & $nextCmd 'dev' '-p' $Port
+    }
+    else {
+        Write-Host "Local next not found; falling back to npm run dev -- -p $Port"
+        npm run dev -- -p $Port
+    }
     Write-Host "Dev server exited."
     exit 0
 }

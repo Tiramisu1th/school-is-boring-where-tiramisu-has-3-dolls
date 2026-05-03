@@ -1,7 +1,8 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
-const print = require('./src/utils/print.js').print;
+import print from './src/utils/print';
+import 'dotenv/config';
 
 print('Start running app.js ... ');
 
@@ -22,37 +23,42 @@ const contentTypes: Record<string, string> = {
 };
 
 function sendFile(res: http.ServerResponse, filePath: string, statusCode?: number) {
-    fs.readFile(filePath, function(err, data) {
+    fs.readFile(filePath, function (err, data) {
         if (err) {
-            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
             res.end('Internal Server Error');
             return;
         }
         const ext = path.extname(filePath).toLowerCase();
         const ct = contentTypes[ext] || 'application/octet-stream';
-        res.writeHead(statusCode || 200, {'Content-Type': ct});
+        res.writeHead(statusCode || 200, { 'Content-Type': ct });
         res.end(data);
     });
 }
 
-const server = http.createServer(function(req: http.IncomingMessage, res: http.ServerResponse) {
+const server = http.createServer(function (req: http.IncomingMessage, res: http.ServerResponse) {
     const base = 'http://localhost';
     const parsed = new URL(req.url || '/', base);
     let pathname = decodeURIComponent(parsed.pathname || '/');
 
     pathname = pathname.replace(/\/\/+$/, '');
     if (pathname === '') pathname = '/';
+    // remove a single trailing slash for non-root paths so "/index/" and
+    // "/index.html/" normalize to "/index" and "/index.html"
+    if (pathname.length > 1 && pathname.endsWith('/')) {
+        pathname = pathname.slice(0, -1);
+    }
 
     const baseDir = __dirname;
 
     if (pathname === '/api' || pathname.startsWith('/api/')) {
         try {
-            const api = require('./src/api');
+            const api = require('./src/api/router');
             const sub = pathname === '/api' ? '/' : pathname.replace(/^\/api/, '');
             api.route(req, res, sub);
             return;
         } catch (e) {
-            res.writeHead(500, {'Content-Type': 'text/plain'});
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
             res.end('API Error');
             return;
         }
@@ -90,7 +96,7 @@ const server = http.createServer(function(req: http.IncomingMessage, res: http.S
     if (fs.existsSync(notFoundPath) && fs.statSync(notFoundPath).isFile()) {
         sendFile(res, notFoundPath, 404);
     } else {
-        res.writeHead(404, {'Content-Type': 'text/plain'});
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
 });
@@ -99,7 +105,7 @@ const port = process.env.PORT;
 
 print('Server setup complete, starting to listen on port ' + String(port) + ' ...');
 
-server.listen(Number(port), function() {
+server.listen(Number(port), function () {
     print('Server started successfully! ', '');
     print(`Listening on port ${port}`);
     print(`To access the server, open http://localhost:${port} in your browser.`);
